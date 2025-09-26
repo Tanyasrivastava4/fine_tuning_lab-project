@@ -1,0 +1,66 @@
+{
+  "builder_name": "parquet",
+  "citation": "",
+  "config_name": "small",
+  "dataset_name": "clinc_oos",
+  "dataset_size": 1088614,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/DeepPavlov/clinc_oos@9b995dc4a780cfabf0c7bb044bab7f48a3762c8d/small/train-00000-of-00001.parquet": {
+      "num_bytes": 168165,
+      "checksum": null
+    },
+    "hf://datasets/DeepPavlov/clinc_oos@9b995dc4a780cfabf0c7bb044bab7f48a3762c8d/small/validation-00000-of-00001.parquet": {
+      "num_bytes": 74532,
+      "checksum": null
+    },
+    "hf://datasets/DeepPavlov/clinc_oos@9b995dc4a780cfabf0c7bb044bab7f48a3762c8d/small/test-00000-of-00001.parquet": {
+      "num_bytes": 132540,
+      "checksum": null
+    }
+  },
+  "download_size": 375237,
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "label": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "label_text": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 1463851,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 514174,
+      "num_examples": 7600,
+      "dataset_name": "clinc_oos"
+    },
+    "validation": {
+      "name": "validation",
+      "num_bytes": 208746,
+      "num_examples": 3100,
+      "dataset_name": "clinc_oos"
+    },
+    "test": {
+      "name": "test",
+      "num_bytes": 365694,
+      "num_examples": 5500,
+      "dataset_name": "clinc_oos"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
