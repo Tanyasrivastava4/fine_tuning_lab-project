@@ -4,9 +4,15 @@ import torch
 from datasets import load_from_disk
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from sklearn.metrics import accuracy_score, confusion_matrix
+import wandb
 
 # ------------------------------
-# 1️⃣ Load merged fine-tuned model and tokenizer
+# 1️⃣ Init Weights & Biases
+# ------------------------------
+wandb.init(project="phi3_finetune_support_tickets", name="evaluation")
+
+# ------------------------------
+# 2️⃣ Load merged fine-tuned model and tokenizer
 # ------------------------------
 model_path = "./fine_tuned_full_model"  # merged model
 tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -14,12 +20,12 @@ model = AutoModelForSequenceClassification.from_pretrained(model_path)
 model.eval()
 
 # ------------------------------
-# 2️⃣ Load test dataset
+# 3️⃣ Load test dataset
 # ------------------------------
 test_dataset = load_from_disk("prepared_data/test")
 
 # ------------------------------
-# 3️⃣ Make predictions
+# 4️⃣ Make predictions
 # ------------------------------
 preds = []
 labels = test_dataset["label"]
@@ -32,7 +38,7 @@ for example in test_dataset:
     preds.append(pred_label)
 
 # ------------------------------
-# 4️⃣ Compute metrics
+# 5️⃣ Compute metrics
 # ------------------------------
 acc = accuracy_score(labels, preds)
 cm = confusion_matrix(labels, preds).tolist()  # convert to list for JSON
@@ -43,10 +49,24 @@ metrics = {
 }
 
 # ------------------------------
-# 5️⃣ Save metrics to JSON
+# 6️⃣ Save metrics to JSON
 # ------------------------------
 with open("metrics.json", "w") as f:
     json.dump(metrics, f, indent=4)
 
+# ------------------------------
+# 7️⃣ Log metrics to W&B
+# ------------------------------
+wandb.log({
+    "eval_accuracy": acc,
+    "confusion_matrix": wandb.plot.confusion_matrix(
+        y_true=labels,
+        preds=preds,
+        title="Confusion Matrix"
+    )
+})
+
+wandb.finish()
+
 print(f"✅ Evaluation complete. Accuracy: {acc:.4f}")
-print("📊 Metrics saved to metrics.json")
+print("📊 Metrics saved to metrics.json and logged to Weights & Biases")
