@@ -19,15 +19,16 @@ eval_data = load_from_disk("prepared_data/prepared_data/test")
 print(f"Train size: {len(train_data)}, Eval size: {len(eval_data)}")
 
 
-# ------------------------------
+
 # 2️⃣ Load Phi-3-mini tokenizer and model
 # ------------------------------
-model_name = "tiiuae/falcon-7b-mini"  # Replace with Phi-3-mini if available
+model_name = "microsoft/phi-3-mini-4k-instruct"  # ✅ correct model
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(
     model_name,
     num_labels=len(set(train_data['label'])),  # number of intents
 )
+
 
 # ------------------------------
 # 3️⃣ LoRA configuration
