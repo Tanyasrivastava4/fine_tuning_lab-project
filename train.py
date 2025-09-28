@@ -10,8 +10,14 @@ import json
 # ------------------------------
 # 1️⃣ Load Dataset
 # ------------------------------
-train_data = load_from_disk("prepared_data/train")
-test_data = load_from_disk("prepared_data/test")
+#train_data = load_from_disk("prepared_data/train")
+#test_data = load_from_disk("prepared_data/test")
+
+train_data = load_from_disk("prepared_data/prepared_data/train")
+eval_data = load_from_disk("prepared_data/prepared_data/test")
+
+print(f"Train size: {len(train_data)}, Eval size: {len(eval_data)}")
+
 
 # ------------------------------
 # 2️⃣ Load Phi-3-mini tokenizer and model
