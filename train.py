@@ -1,99 +1,94 @@
 # train.py
-import os
-import torch
 from datasets import load_from_disk
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
-from peft import LoraConfig, get_peft_model, TaskType
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+from peft import get_peft_model, LoraConfig, TaskType, PeftModel
+import torch
 import wandb
-import json
 
 # ------------------------------
-# 1️⃣ Load Dataset
+# 1️⃣ Load dataset
 # ------------------------------
-#train_data = load_from_disk("prepared_data/train")
-#test_data = load_from_disk("prepared_data/test")
+train_dataset = load_from_disk("prepared_data/train")
+eval_dataset = load_from_disk("prepared_data/val")
 
-train_data = load_from_disk("prepared_data/prepared_data/train")
-eval_data = load_from_disk("prepared_data/prepared_data/test")
+# Determine number of labels dynamically
+num_labels = len(set(train_dataset['label']))
 
-print(f"Train size: {len(train_data)}, Eval size: {len(eval_data)}")
-
-
-
-# 2️⃣ Load Phi-3-mini tokenizer and model
 # ------------------------------
-model_name = "microsoft/phi-3-mini-4k-instruct"  # ✅ correct model
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(
-    model_name,
-    num_labels=len(set(train_data['label'])),  # number of intents
+# 2️⃣ Load tokenizer and base model
+# ------------------------------
+tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-3-mini-4k-instruct")
+base_model = AutoModelForSequenceClassification.from_pretrained(
+    "microsoft/phi-3-mini-4k-instruct",
+    num_labels=num_labels
 )
 
-
 # ------------------------------
-# 3️⃣ LoRA configuration
+# 3️⃣ Apply LoRA/PEFT
 # ------------------------------
-peft_config = LoraConfig(
+lora_config = LoraConfig(
+    task_type=TaskType.SEQ_CLS,
     r=8,
-    lora_alpha=32,
-    target_modules=["q_proj", "v_proj"],
+    lora_alpha=16,
+    target_modules=["score"],  # adjust based on your model
     lora_dropout=0.05,
-    task_type=TaskType.SEQ_CLS
+    bias="none",
+    fan_in_fan_out=False
 )
 
-model = get_peft_model(model, peft_config)
+model = get_peft_model(base_model, lora_config)
 
 # ------------------------------
-# 4️⃣ Tokenize dataset
-# ------------------------------
-def tokenize(batch):
-    return tokenizer(batch['text'], padding=True, truncation=True)
-
-train_data = train_data.map(tokenize, batched=True)
-test_data = test_data.map(tokenize, batched=True)
-
-train_data.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
-test_data.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
-
-# ------------------------------
-# 5️⃣ Training arguments
+# 4️⃣ Training arguments
 # ------------------------------
 training_args = TrainingArguments(
     output_dir="./fine_tuned_model",
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
-    num_train_epochs=1,
-    logging_steps=10,
-    evaluation_strategy="epoch",
-    save_strategy="epoch",
+    gradient_accumulation_steps=1,
     learning_rate=2e-4,
-    fp16=True,
-    report_to="wandb"  # logs to W&B dashboard
+    num_train_epochs=1,
+    logging_dir="./logs",
+    logging_steps=10,
+    save_strategy="steps",
+    save_steps=500,
+    evaluation_strategy="steps",
+    eval_steps=500,
+    load_best_model_at_end=False,
+    report_to="wandb"
 )
 
-# Initialize W&B
-wandb.init(project="phi3_finetune_support_tickets")
-
 # ------------------------------
-# 6️⃣ Trainer
+# 5️⃣ Initialize Trainer
 # ------------------------------
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_data,
-    eval_dataset=test_data,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
     tokenizer=tokenizer
 )
 
 # ------------------------------
-# 7️⃣ Train
+# 6️⃣ Train model
 # ------------------------------
 trainer.train()
 
-# ------------------------------
-# 8️⃣ Save model
-# ------------------------------
+# Save PEFT/adapter model
 model.save_pretrained("./fine_tuned_model")
 tokenizer.save_pretrained("./fine_tuned_model")
 
-print("Fine-tuned model saved in './fine_tuned_model'")
+# ------------------------------
+# 7️⃣ Merge LoRA weights into base model
+# ------------------------------
+base_model = AutoModelForSequenceClassification.from_pretrained(
+    "microsoft/phi-3-mini-4k-instruct",
+    num_labels=num_labels
+)
+peft_model = PeftModel.from_pretrained(base_model, "./fine_tuned_model")
+full_model = peft_model.merge_and_unload()
+full_model.save_pretrained("./fine_tuned_full_model")
+tokenizer.save_pretrained("./fine_tuned_full_model")
+
+print("✅ Training complete. PEFT model saved to './fine_tuned_model'.")
+print("✅ Merged full model saved to './fine_tuned_full_model'.")
