@@ -3,10 +3,10 @@ import json
 import torch
 from datasets import load_from_disk
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from peft import PeftModel
 from sklearn.metrics import accuracy_score, confusion_matrix
 from torch.utils.data import DataLoader
 import wandb
-import pandas as pd
 
 # ------------------------------
 # 1️⃣ Initialize W&B
@@ -14,26 +14,39 @@ import pandas as pd
 wandb.init(project="phi3_finetune_support_tickets", name="evaluation")
 
 # ------------------------------
-# 2️⃣ Load merged fine-tuned model and tokenizer
+# 2️⃣ Load tokenizer from fine-tuned adapter
 # ------------------------------
-model_path = "./fine_tuned_full_model"
-tokenizer = AutoTokenizer.from_pretrained(model_path)
-model = AutoModelForSequenceClassification.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained("./fine_tuned_model")
 
 # ------------------------------
-# 3️⃣ Move model to GPU if available
+# 3️⃣ Load base model with correct number of labels
 # ------------------------------
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model.to(device)
+num_labels = 100  # same as training
+base_model_name = "microsoft/phi-3-mini-4k-instruct"
+base_model = AutoModelForSequenceClassification.from_pretrained(
+    base_model_name,
+    num_labels=num_labels
+)
+
+# ------------------------------
+# 4️⃣ Load PEFT LoRA adapter safely
+# ------------------------------
+model = PeftModel.from_pretrained(base_model, "./fine_tuned_model")
 model.eval()
 
 # ------------------------------
-# 4️⃣ Load test dataset
+# 5️⃣ Move model to GPU if available
+# ------------------------------
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model.to(device)
+
+# ------------------------------
+# 6️⃣ Load test dataset
 # ------------------------------
 test_dataset = load_from_disk("prepared_data/prepared_data/test")
 
 # ------------------------------
-# 5️⃣ Tokenize test dataset
+# 7️⃣ Tokenize test dataset
 # ------------------------------
 def tokenize(batch):
     return tokenizer(batch['text'], padding=True, truncation=True)
@@ -41,12 +54,12 @@ def tokenize(batch):
 test_dataset = test_dataset.map(tokenize, batched=True)
 
 # ------------------------------
-# 6️⃣ Set format for PyTorch
+# 8️⃣ Set format for PyTorch
 # ------------------------------
 test_dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
 
 # ------------------------------
-# 7️⃣ Create DataLoader for batched inference
+# 9️⃣ Create DataLoader for batched inference
 # ------------------------------
 batch_size = 32  # adjust based on GPU memory
 dataloader = DataLoader(test_dataset, batch_size=batch_size)
@@ -55,7 +68,7 @@ preds = []
 labels = []
 
 # ------------------------------
-# 8️⃣ Batched predictions
+# 🔟 Batched predictions
 # ------------------------------
 for batch in dataloader:
     input_ids = batch['input_ids'].to(device)
@@ -67,7 +80,7 @@ for batch in dataloader:
         labels.extend(batch['label'].tolist())
 
 # ------------------------------
-# 9️⃣ Compute metrics
+# 1️⃣1️⃣ Compute metrics
 # ------------------------------
 acc = accuracy_score(labels, preds)
 cm = confusion_matrix(labels, preds).tolist()
@@ -78,23 +91,40 @@ metrics = {
 }
 
 # ------------------------------
-# 🔟 Save metrics to JSON
+# 1️⃣2️⃣ Save metrics to JSON
 # ------------------------------
 with open("metrics.json", "w") as f:
     json.dump(metrics, f, indent=4)
 
 # ------------------------------
-# 1️⃣1️⃣ Log metrics to W&B (memory-safe)
+# 1️⃣3️⃣ Log metrics to W&B
 # ------------------------------
-# Log only accuracy (very lightweight)
 wandb.log({"eval_accuracy": acc})
 
-# Optional: log confusion matrix for first 200 predictions only
+# Optional: log confusion matrix for first 200 predictions
+#import pandas as pd
+#sample_size = 200
+#sample_cm = confusion_matrix(labels[:sample_size], preds[:sample_size])
+#wandb.log({"confusion_matrix_sample": wandb.Table(data=sample_cm)})
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 sample_size = 200
 sample_cm = confusion_matrix(labels[:sample_size], preds[:sample_size])
-wandb.log({"confusion_matrix_sample": wandb.Table(data=sample_cm.tolist())})
+
+plt.figure(figsize=(6, 5))
+sns.heatmap(sample_cm, annot=True, fmt="d", cmap="Blues")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix Sample")
+plt.tight_layout()
+
+wandb.log({"confusion_matrix_sample": wandb.Image(plt)})
+plt.close()
 
 wandb.finish()
 
 print(f"✅ Evaluation complete. Accuracy: {acc:.4f}")
 print("📊 Metrics saved to metrics.json and logged to Weights & Biases")
+
