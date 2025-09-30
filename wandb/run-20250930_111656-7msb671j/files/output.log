@@ -1,0 +1,59 @@
+/fine_tuning_lab-project/train.py:92: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+                                     
+{'loss': 6.4964, 'grad_norm': 35.95823287963867, 'learning_rate': 0.0001964, 'epoch': 0.02}
+{'loss': 6.2509, 'grad_norm': 26.88578224182129, 'learning_rate': 0.00019240000000000001, 'epoch': 0.04}
+{'loss': 5.4472, 'grad_norm': 43.67782974243164, 'learning_rate': 0.0001884, 'epoch': 0.06}
+{'loss': 4.9331, 'grad_norm': 36.18239212036133, 'learning_rate': 0.0001844, 'epoch': 0.08}
+{'loss': 3.915, 'grad_norm': 27.581750869750977, 'learning_rate': 0.00018040000000000002, 'epoch': 0.1}
+{'loss': 3.1977, 'grad_norm': 25.25722885131836, 'learning_rate': 0.0001764, 'epoch': 0.12}
+{'loss': 2.1677, 'grad_norm': 21.646970748901367, 'learning_rate': 0.00017240000000000002, 'epoch': 0.14}
+{'loss': 2.0797, 'grad_norm': 40.599544525146484, 'learning_rate': 0.0001684, 'epoch': 0.16}
+{'loss': 1.3813, 'grad_norm': 34.78555679321289, 'learning_rate': 0.0001644, 'epoch': 0.18}
+{'loss': 1.4883, 'grad_norm': 33.08491134643555, 'learning_rate': 0.00016040000000000002, 'epoch': 0.2}
+{'loss': 0.9912, 'grad_norm': 21.242233276367188, 'learning_rate': 0.0001564, 'epoch': 0.22}
+{'loss': 0.6619, 'grad_norm': 20.765031814575195, 'learning_rate': 0.00015240000000000002, 'epoch': 0.24}
+{'loss': 0.6452, 'grad_norm': 30.530014038085938, 'learning_rate': 0.0001484, 'epoch': 0.26}
+{'loss': 0.3344, 'grad_norm': 16.705074310302734, 'learning_rate': 0.0001444, 'epoch': 0.28}
+{'loss': 0.7277, 'grad_norm': 30.718862533569336, 'learning_rate': 0.0001404, 'epoch': 0.3}
+{'loss': 0.3856, 'grad_norm': 11.215917587280273, 'learning_rate': 0.0001364, 'epoch': 0.32}
+{'loss': 0.6684, 'grad_norm': 14.056248664855957, 'learning_rate': 0.00013240000000000002, 'epoch': 0.34}
+{'loss': 0.3146, 'grad_norm': 27.15240478515625, 'learning_rate': 0.0001284, 'epoch': 0.36}
+{'loss': 0.3167, 'grad_norm': 26.523462295532227, 'learning_rate': 0.00012440000000000002, 'epoch': 0.38}
+{'loss': 0.4625, 'grad_norm': 33.863365173339844, 'learning_rate': 0.0001204, 'epoch': 0.4}
+{'loss': 0.4156, 'grad_norm': 15.149072647094727, 'learning_rate': 0.0001164, 'epoch': 0.42}
+{'loss': 0.4858, 'grad_norm': 14.839012145996094, 'learning_rate': 0.00011240000000000002, 'epoch': 0.44}
+{'loss': 0.1441, 'grad_norm': 9.762018203735352, 'learning_rate': 0.00010840000000000002, 'epoch': 0.46}
+{'loss': 0.5535, 'grad_norm': 14.43226432800293, 'learning_rate': 0.0001044, 'epoch': 0.48}
+{'loss': 0.2412, 'grad_norm': 3.208974599838257, 'learning_rate': 0.0001004, 'epoch': 0.5}
+{'loss': 0.2097, 'grad_norm': 26.914079666137695, 'learning_rate': 9.64e-05, 'epoch': 0.52}
+{'loss': 0.3624, 'grad_norm': 20.820343017578125, 'learning_rate': 9.240000000000001e-05, 'epoch': 0.54}
+{'loss': 0.4548, 'grad_norm': 1.700661063194275, 'learning_rate': 8.840000000000001e-05, 'epoch': 0.56}
+{'loss': 0.2509, 'grad_norm': 16.724853515625, 'learning_rate': 8.44e-05, 'epoch': 0.58}
+{'loss': 0.4056, 'grad_norm': 0.3053443729877472, 'learning_rate': 8.04e-05, 'epoch': 0.6}
+{'loss': 0.2055, 'grad_norm': 1.2924649715423584, 'learning_rate': 7.64e-05, 'epoch': 0.62}
+{'loss': 0.358, 'grad_norm': 2.6608777046203613, 'learning_rate': 7.24e-05, 'epoch': 0.64}
+{'loss': 0.1942, 'grad_norm': 0.40038877725601196, 'learning_rate': 6.840000000000001e-05, 'epoch': 0.66}
+{'loss': 0.1574, 'grad_norm': 1.406199336051941, 'learning_rate': 6.440000000000001e-05, 'epoch': 0.68}
+{'loss': 0.0856, 'grad_norm': 0.0818818137049675, 'learning_rate': 6.04e-05, 'epoch': 0.7}
+{'loss': 0.1394, 'grad_norm': 1.8847779035568237, 'learning_rate': 5.6399999999999995e-05, 'epoch': 0.72}
+{'loss': 0.0881, 'grad_norm': 5.560378551483154, 'learning_rate': 5.2400000000000007e-05, 'epoch': 0.74}
+{'loss': 0.0612, 'grad_norm': 16.130651473999023, 'learning_rate': 4.8400000000000004e-05, 'epoch': 0.76}
+{'loss': 0.1981, 'grad_norm': 23.33443832397461, 'learning_rate': 4.44e-05, 'epoch': 0.78}
+{'loss': 0.1727, 'grad_norm': 3.7646842002868652, 'learning_rate': 4.0400000000000006e-05, 'epoch': 0.8}
+{'loss': 0.0476, 'grad_norm': 0.034487828612327576, 'learning_rate': 3.6400000000000004e-05, 'epoch': 0.82}
+{'loss': 0.0333, 'grad_norm': 0.8306953310966492, 'learning_rate': 3.24e-05, 'epoch': 0.84}
+{'loss': 0.0796, 'grad_norm': 8.947545051574707, 'learning_rate': 2.84e-05, 'epoch': 0.86}
+{'loss': 0.1176, 'grad_norm': 27.61069679260254, 'learning_rate': 2.44e-05, 'epoch': 0.88}
+{'loss': 0.0532, 'grad_norm': 15.340173721313477, 'learning_rate': 2.04e-05, 'epoch': 0.9}
+{'loss': 0.2723, 'grad_norm': 27.825044631958008, 'learning_rate': 1.6400000000000002e-05, 'epoch': 0.92}
+{'loss': 0.0769, 'grad_norm': 0.23614835739135742, 'learning_rate': 1.24e-05, 'epoch': 0.94}
+{'loss': 0.1369, 'grad_norm': 22.901931762695312, 'learning_rate': 8.400000000000001e-06, 'epoch': 0.96}
+{'loss': 0.0354, 'grad_norm': 0.1226835623383522, 'learning_rate': 4.4e-06, 'epoch': 0.98}
+{'loss': 0.2238, 'grad_norm': 26.800373077392578, 'learning_rate': 4.0000000000000003e-07, 'epoch': 1.0}
+{'train_runtime': 133.7761, 'train_samples_per_second': 29.901, 'train_steps_per_second': 3.738, 'train_loss': 0.9825165686607361, 'epoch': 1.0}
+✅ Fine-tuned adapter model saved in './fine_tuned_model'
+Loading checkpoint shards: 100% 2/2 [00:13<00:00,  6.72s/it]
+Some weights of Phi3ForSequenceClassification were not initialized from the model checkpoint at microsoft/phi-3-mini-4k-instruct and are newly initialized: ['score.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+✅ Merged full model saved to './fine_tuned_full_model'

@@ -1,0 +1,26 @@
+2025-09-30 11:24:23,343 INFO    MainThread:932 [wandb_setup.py:_flush():81] Current SDK version is 0.22.1
+2025-09-30 11:24:23,343 INFO    MainThread:932 [wandb_setup.py:_flush():81] Configure stats pid to 932
+2025-09-30 11:24:23,343 INFO    MainThread:932 [wandb_setup.py:_flush():81] Loading settings from /root/.config/wandb/settings
+2025-09-30 11:24:23,343 INFO    MainThread:932 [wandb_setup.py:_flush():81] Loading settings from /fine_tuning_lab-project/wandb/settings
+2025-09-30 11:24:23,343 INFO    MainThread:932 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-09-30 11:24:23,344 INFO    MainThread:932 [wandb_init.py:setup_run_log_directory():705] Logging user logs to /fine_tuning_lab-project/wandb/run-20250930_112423-yzzace1e/logs/debug.log
+2025-09-30 11:24:23,344 INFO    MainThread:932 [wandb_init.py:setup_run_log_directory():706] Logging internal logs to /fine_tuning_lab-project/wandb/run-20250930_112423-yzzace1e/logs/debug-internal.log
+2025-09-30 11:24:23,344 INFO    MainThread:932 [wandb_init.py:init():832] calling init triggers
+2025-09-30 11:24:23,344 INFO    MainThread:932 [wandb_init.py:init():837] wandb.init called with sweep_config: {}
+config: {'_wandb': {}}
+2025-09-30 11:24:23,344 INFO    MainThread:932 [wandb_init.py:init():880] starting backend
+2025-09-30 11:24:23,552 INFO    MainThread:932 [wandb_init.py:init():883] sending inform_init request
+2025-09-30 11:24:23,556 INFO    MainThread:932 [wandb_init.py:init():891] backend started and connected
+2025-09-30 11:24:23,557 INFO    MainThread:932 [wandb_init.py:init():961] updated telemetry
+2025-09-30 11:24:23,564 INFO    MainThread:932 [wandb_init.py:init():985] communicating run to backend with 90.0 second timeout
+2025-09-30 11:24:24,082 INFO    MainThread:932 [wandb_init.py:init():1036] starting run threads in backend
+2025-09-30 11:24:24,186 INFO    MainThread:932 [wandb_run.py:_console_start():2506] atexit reg
+2025-09-30 11:24:24,187 INFO    MainThread:932 [wandb_run.py:_redirect():2354] redirect: wrap_raw
+2025-09-30 11:24:24,187 INFO    MainThread:932 [wandb_run.py:_redirect():2423] Wrapping output streams.
+2025-09-30 11:24:24,187 INFO    MainThread:932 [wandb_run.py:_redirect():2446] Redirects installed.
+2025-09-30 11:24:24,190 INFO    MainThread:932 [wandb_init.py:init():1076] run started, returning control to user process
+2025-09-30 11:25:09,803 INFO    MainThread:932 [wandb_run.py:_finish():2272] finishing run tanyasrivastava656-na/phi3_finetune_support_tickets/yzzace1e
+2025-09-30 11:25:09,803 INFO    MainThread:932 [wandb_run.py:_atexit_cleanup():2471] got exitcode: 0
+2025-09-30 11:25:09,804 INFO    MainThread:932 [wandb_run.py:_restore():2453] restore
+2025-09-30 11:25:09,804 INFO    MainThread:932 [wandb_run.py:_restore():2459] restore done
+2025-09-30 11:25:10,676 INFO    MainThread:932 [wandb_run.py:_footer_sync_info():3869] logging synced files
