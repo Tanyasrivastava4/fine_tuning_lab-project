@@ -127,3 +127,156 @@ full_model.save_pretrained("./fine_tuned_full_model")
 tokenizer.save_pretrained("./fine_tuned_full_model")
 
 print("✅ Merged full model saved to './fine_tuned_full_model'")
+
+
+
+
+
+
+
+
+
+
+
+
+# use the when you want to see the log and metrics in wandb more clearly
+# train_wandb.py
+#import torch
+#from datasets import load_from_disk
+#from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer, EarlyStoppingCallback
+#from peft import LoraConfig, get_peft_model, TaskType
+#import wandb
+
+# ------------------------------
+# 1️⃣ Load Dataset
+# ------------------------------
+#train_data = load_from_disk("prepared_data/prepared_data/train")
+#eval_data = load_from_disk("prepared_data/prepared_data/test")
+
+#unique_labels = sorted(set(train_data['label']))
+#label2id = {label: idx for idx, label in enumerate(unique_labels)}
+#id2label = {idx: label for label, idx in label2id.items()}
+#num_labels = len(unique_labels)
+
+#def remap_labels(batch):
+ #   return {'label': label2id[batch['label']]}
+
+#train_data = train_data.map(remap_labels)
+#eval_data = eval_data.map(remap_labels)
+
+#print(f"Train size: {len(train_data)}, Eval size: {len(eval_data)}")
+
+# ------------------------------
+# 2️⃣ Load tokenizer and base model
+# ------------------------------
+#model_name = "microsoft/phi-3-mini-4k-instruct"
+#tokenizer = AutoTokenizer.from_pretrained(model_name)
+#base_model = AutoModelForSequenceClassification.from_pretrained(
+ #   model_name,
+  #  num_labels=num_labels,
+  #  id2label=id2label,
+   # label2id=label2id
+#)
+
+# ------------------------------
+# 3️⃣ Configure LoRA
+# ------------------------------
+#peft_config = LoraConfig(
+ #   r=8,
+  #  lora_alpha=32,
+   # target_modules=["qkv_proj", "o_proj", "gate_up_proj", "down_proj"],
+    #lora_dropout=0.05,
+    #task_type=TaskType.SEQ_CLS
+#)
+#model = get_peft_model(base_model, peft_config)
+
+# ------------------------------
+# 4️⃣ Tokenize dataset
+# ------------------------------
+#def tokenize(batch):
+ #   return tokenizer(batch['text'], padding=True, truncation=True)
+
+#train_data = train_data.map(tokenize, batched=True)
+#eval_data = eval_data.map(tokenize, batched=True)
+
+#train_data.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
+#eval_data.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
+
+# ------------------------------
+# 5️⃣ Training arguments
+# ------------------------------
+#training_args = TrainingArguments(
+ #   output_dir="./fine_tuned_model",
+  #  per_device_train_batch_size=8,
+   # per_device_eval_batch_size=8,
+   # num_train_epochs=1,
+   # logging_steps=10,
+   # evaluation_strategy="steps",
+   # save_strategy="epoch",
+   # learning_rate=2e-4,
+   # fp16=True,
+   # report_to="wandb",
+   # load_best_model_at_end=True,
+   # metric_for_best_model="accuracy"
+#)
+
+# ------------------------------
+# 6️⃣ Initialize W&B
+# ------------------------------
+#wandb.login()  # Will prompt for API key if not set
+#wandb.init(project="phi3_finetune_support_tickets", name="training")
+
+# ------------------------------
+# 7️⃣ Define metrics for evaluation
+# ------------------------------
+#from sklearn.metrics import accuracy_score
+
+#def compute_metrics(pred):
+ #   labels = pred.label_ids
+  #  preds = pred.predictions.argmax(-1)
+  #  acc = accuracy_score(labels, preds)
+   # return {"accuracy": acc}
+
+# ------------------------------
+# 8️⃣ Trainer
+# ------------------------------
+#trainer = Trainer(
+ #   model=model,
+  #  args=training_args,
+  #  train_dataset=train_data,
+  #  eval_dataset=eval_data,
+   # tokenizer=tokenizer,
+   # compute_metrics=compute_metrics,
+   # callbacks=[EarlyStoppingCallback(early_stopping_patience=2)]
+#)
+
+# ------------------------------
+# 9️⃣ Train model
+# ------------------------------
+#trainer.train()
+
+# ------------------------------
+# 🔟 Save fine-tuned adapter model
+# ------------------------------
+#model.save_pretrained("./fine_tuned_model")
+#tokenizer.save_pretrained("./fine_tuned_model")
+#print("✅ Fine-tuned adapter model saved in './fine_tuned_model'")
+
+# ------------------------------
+# 1️⃣1️⃣ Merge LoRA weights into base model
+# ------------------------------
+#from peft import PeftModel
+#base_model = AutoModelForSequenceClassification.from_pretrained(
+ #   model_name,
+  #  num_labels=num_labels,
+   # id2label=id2label,
+   # label2id=label2id
+#)
+#peft_model = PeftModel.from_pretrained(base_model, "./fine_tuned_model")
+#full_model = peft_model.merge_and_unload()
+#full_model.save_pretrained("./fine_tuned_full_model")
+#tokenizer.save_pretrained("./fine_tuned_full_model")
+#print("✅ Merged full model saved to './fine_tuned_full_model'")
+
+#wandb.finish()
+
